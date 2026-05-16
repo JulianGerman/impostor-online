@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Impostor — online</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -310,7 +310,7 @@
       <div class="share-box" id="share-link"></div>
       <button class="copy-btn" id="copy-btn" onclick="copyLink()">📋 Skopiuj link</button>
 
-      <div class="qr-wrap" id="qr-wrap"><canvas id="qr-canvas"></canvas></div>
+      <div class="qr-wrap" id="qr-wrap"><div id="qr-target"></div></div>
       <p class="share-hint">Albo niech zeskanują kod QR</p>
 
       <div class="btn-row">
@@ -584,13 +584,19 @@ function generateLink() {
 }
 
 function renderQR(url) {
-  const canvas = document.getElementById("qr-canvas");
+  const target = document.getElementById("qr-target");
+  target.innerHTML = "";
   if (typeof QRCode === "undefined") {
     document.getElementById("qr-wrap").style.display = "none";
     return;
   }
-  QRCode.toCanvas(canvas, url, { width: 240, margin: 1, errorCorrectionLevel: 'L' }, (err) => {
-    if (err) console.error(err);
+  new QRCode(target, {
+    text: url,
+    width: 240,
+    height: 240,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.L
   });
 }
 
